@@ -8,13 +8,17 @@ router.use(authorize);
 
 // GET semua data movies
 router.get('/', (req, res) => {
-    pool.query('SELECT * FROM movies', (error, results) => {
+    const page = req.query.page || 1; // Membaca parameter 'page' dari URL atau mengatur nilai default 1
+    const limit = req.query.limit || 10; // Membaca parameter 'limit' dari URL atau mengatur nilai default 10
+    const offset = (page - 1) * limit; // Menghitung nilai offset berdasarkan 'page' dan 'limit'
+    pool.query('SELECT * FROM movies OFFSET $1 LIMIT $2', [offset, limit], (error, results) => {
         if (error) {
             throw error;
         }
         res.json(results.rows);
     });
 });
+
 
 // GET data movie berdasarkan ID
 router.get('/:id', (req, res) => {
