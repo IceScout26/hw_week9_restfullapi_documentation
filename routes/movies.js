@@ -29,17 +29,25 @@ router.get('/:id', (req, res) => {
 
 // POST data movie baru (memerlukan otentikasi)
 router.post('/', (req, res) => {
-    const {
-        title,
-        genres,
-        year
-    } = req.body;
-    pool.query('INSERT INTO movies (title, genres, year) VALUES ($1, $2, $3)', [title, genres, year], (error, results) => {
+    const { title, genres, year } = req.body;
+
+    // Ambil ID terakhir dari tabel
+    pool.query('SELECT MAX(id) FROM movies', (error, results) => {
         if (error) {
             throw error;
         }
-        res.json({
-            message: 'Data movie baru berhasil ditambahkan'
+
+        // Hitung ID baru
+        const newId = results.rows[0].max + 1;
+
+        // Masukkan data baru dengan ID baru
+        pool.query('INSERT INTO movies (id, title, genres, year) VALUES ($1, $2, $3, $4)', [newId, title, genres, year], (error, results) => {
+            if (error) {
+                throw error;
+            }
+            res.json({
+                message: 'Data movie baru berhasil ditambahkan dengan ID ' + newId
+            });
         });
     });
 });
