@@ -7,15 +7,28 @@ const pool = require('../queries'); // Import koneksi ke database PostgreSQL
 router.post('/login', (req, res) => {
     const { email, password } = req.body;
 
-    // Validasi email dan password, lalu buat token jika sesuai
-    // Gantilah logika validasi ini sesuai kebutuhan Anda, contoh ini sangat sederhana
-    if (email === 'user@example.com' && password === 'password') {
-        const user = { email: email };
-        const token = jwt.sign(user, 'scipio'); // Ganti dengan kunci rahasia yang kuat
-        res.json({ token });
-    } else {
-        res.status(401).json({ message: 'Gagal login' });
-    }
+    // Query ke basis data untuk mencari pengguna dengan email yang cocok
+    pool.query('SELECT * FROM users WHERE email = $1', [email], (error, results) => {
+        if (error) {
+            throw error;
+        }
+
+        if (results.rows.length === 1) {
+            // Pengguna ditemukan berdasarkan email, sekarang periksa kata sandi
+            const user = results.rows[0];
+            if (user.password === password) {
+                // Kata sandi cocok, buat token JWT dan kirimkan sebagai respons
+                const token = jwt.sign({ email: email, id: user.id }, 'scipio'); // Ganti dengan kunci rahasia yang kuat
+                res.json({ token });
+            } else {
+                // Kata sandi tidak cocok
+                res.status(401).json({ message: 'Gagal login' });
+            }
+        } else {
+            // Pengguna tidak ditemukan berdasarkan email
+            res.status(401).json({ message: 'Gagal login' });
+        }
+    });
 });
 
 router.post('/register', (req, res) => {
