@@ -35,19 +35,18 @@ router.post('/register', (req, res) => {
     const { email, password, gender, role } = req.body;
 
     // Cek apakah email sudah terdaftar
-    pool.query('SELECT * FROM users WHERE email = $1', [email], (error, results) => {
+    pool.query('SELECT MAX(id) AS max_id FROM users', (error, results) => {
         if (error) {
             throw error;
         }
 
-        if (results.rows.length > 0) {
-            return res.status(400).json({ message: 'Email sudah terdaftar' });
-        }
+        const maxId = results.rows[0].max_id || 0;
+        const newId = maxId + 1;
 
-        // Jika email belum terdaftar, tambahkan pengguna baru
+        // Jika email belum terdaftar, tambahkan pengguna baru dengan id baru
         pool.query(
-            'INSERT INTO users (email, password, gender, role) VALUES ($1, $2, $3, $4) RETURNING id',
-            [email, password, gender, role],
+            'INSERT INTO users (id, email, password, gender, role) VALUES ($1, $2, $3, $4, $5)',
+            [newId, email, password, gender, role],
             (error, results) => {
                 if (error) {
                     throw error;
@@ -56,7 +55,7 @@ router.post('/register', (req, res) => {
                 // Buat token otentikasi untuk pengguna yang baru mendaftar
                 const user = {
                     email: email,
-                    id: results.rows[0].id
+                    id: newId
                 };
                 const token = jwt.sign(user, 'scipio'); // Ganti dengan kunci rahasia yang kuat
                 res.json({ message: 'Pendaftaran berhasil', token });
