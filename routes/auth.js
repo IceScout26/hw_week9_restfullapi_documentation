@@ -4,7 +4,42 @@ const jwt = require('jsonwebtoken');
 const pool = require('../queries');
 const { TokenExpiredError } = require('jsonwebtoken'); // Import error TokenExpiredError (opsional)
 
-// Middleware untuk otentikasi user
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     LoginInput:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *         password:
+ *           type: string
+ *
+ *     AuthResponse:
+ *       type: object
+ *       properties:
+ *         token:
+ *           type: string
+ *
+ * /auth/login:
+ *   post:
+ *     summary: User login
+ *     description: Authenticate a user by providing email and password.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginInput'
+ *     responses:
+ *       200:
+ *         description: User has been authenticated.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthResponse'
+ */
 router.post('/login', (req, res) => {
     const { email, password } = req.body;
 
@@ -27,6 +62,26 @@ router.post('/login', (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: User registration
+ *     description: Register a new user with the provided data.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RegisterInput'
+ *     responses:
+ *       200:
+ *         description: User registration successful.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthResponse'
+ */
 router.post('/register', (req, res) => {
     const { email, password, gender, role } = req.body;
 
@@ -57,6 +112,20 @@ router.post('/register', (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /auth/authorize:
+ *   get:
+ *     summary: Authorize user
+ *     description: Authorize a user to access protected routes.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User has been authorized.
+ *       401:
+ *         description: Unauthorized, token is missing or invalid.
+ */
 function authorize(req, res, next) {
     const token = req.header('x-auth-token');
     if (!token) return res.status(401).json({ message: 'Akses ditolak. Token tidak disediakan.' });
