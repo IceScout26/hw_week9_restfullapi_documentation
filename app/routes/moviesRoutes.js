@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const moviesController = require('../controllers/moviesController');
-const { authorize } = require('./auth');
+const { authorize } = require('./authRoutes');
 
 /**
  * @swagger
