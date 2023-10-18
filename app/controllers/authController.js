@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const pool = require('../../config/queries');
 const { TokenExpiredError } = require('jsonwebtoken');
 
 function authorize(req, res, next) {
