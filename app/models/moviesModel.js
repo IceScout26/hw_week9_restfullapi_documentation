@@ -1,4 +1,4 @@
-const pool = require('../queries');
+const pool = require('../../config/queries');
 
 // Model functions for movies
 const getMovies = (offset, limit, callback) => {
