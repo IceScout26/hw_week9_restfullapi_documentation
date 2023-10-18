@@ -12,11 +12,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(morgan('common'));
 
-const moviesRouter = require('./app/routes/moviesRoutes.js'); // Sesuaikan dengan struktur folder
-const authRouter = require('./app/routes/authRoutes.js'); // Sesuaikan dengan struktur folder
+const moviesRouter = require('./routes/movies.js');
+const authRouter = require('./routes/auth.js');
 
 app.use('/movies', moviesRouter);
-app.use('/auth', authRouter);
+app.use('/auth', authRouter.router);
 
 const swaggerOptions = {
     definition: {
@@ -32,7 +32,7 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ['./app/routes/*.js'], // Sesuaikan dengan struktur folder
+    apis: ['./routes/*.js'],
 };
 
 const specs = swaggerJsdoc(swaggerOptions);
