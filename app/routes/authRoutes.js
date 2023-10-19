@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController'); // Import controller
-const { authorize } = require('../controllers/authController'); // Import authorize middleware
 
 /**
  * @swagger
