@@ -2,6 +2,20 @@ const express = require('express');
 const router = express.Router();
 const moviesController = require('../controllers/moviesController');
 const authRouter = require('./authRoutes');
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'app/views/photos/'); // Direktori untuk menyimpan foto
+    },
+    filename: (req, file, cb) => {
+        const ext = file.originalname.split('.').pop();
+        cb(null, Date.now() + '.' + ext); // Nama file yang diunggah
+    }
+});
+
+const upload = multer({ storage: storage });
 
 /**
  * @swagger
@@ -11,6 +25,8 @@ const authRouter = require('./authRoutes');
  */
 
 router.use('/authRoutes', authRouter);
+router.use('/uploads', express.static(path.join(__dirname, '../views/photos')));
+
 
 /**
  * @swagger
@@ -132,5 +148,7 @@ router.put('/:id', moviesController.updateMovie);
  */
 
 router.delete('/:id', moviesController.deleteMovie);
+
+router.put('/photo/:id', upload.single('photo'), moviesController.uploadMoviePhoto);
 
 module.exports = router;
