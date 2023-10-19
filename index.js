@@ -16,7 +16,7 @@ const moviesRouter = require('./app/routes/moviesRoutes.js');
 const authRouter = require('./app/routes/authRoutes.js');
 
 app.use('/moviesRoutes', moviesRouter);
-app.use('/authRoutes', authRouter.router);
+app.use('/authRoutes', authRouter);
 
 const swaggerOptions = {
     definition: {
@@ -32,7 +32,7 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ['./routes/*.js'],
+    apis: ['./app/routes/*.js'],
 };
 
 const specs = swaggerJsdoc(swaggerOptions);
