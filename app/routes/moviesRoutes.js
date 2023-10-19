@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const moviesController = require('../controllers/moviesController');
-const { authorize } = require('./authRoutes');
+const authRouter = require('./authRoutes');
 
 /**
  * @swagger
@@ -10,7 +10,7 @@ const { authorize } = require('./authRoutes');
  *   description: Endpoints to manage movies
  */
 
-router.use(authorize);
+router.use('/authRoutes', authRouter);
 
 /**
  * @swagger
