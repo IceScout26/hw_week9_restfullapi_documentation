@@ -12,8 +12,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(morgan('common'));
 
-const moviesRouter = require('./routes/moviesRoutes.js');
-const authRouter = require('./routes/authRoutes.js');
+const moviesRouter = require('./app/routes/moviesRoutes.js');
+const authRouter = require('./app/routes/authRoutes.js');
 
 app.use('/moviesRoutes', moviesRouter);
 app.use('/authRoutes', authRouter.router);
