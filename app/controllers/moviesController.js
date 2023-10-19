@@ -1,5 +1,7 @@
 // moviesController.js
 const moviesModel = require('../models/moviesModel');
+const fs = require('fs');
+const path = require('path');
 
 function getMovies(req, res) {
     moviesModel.getAllMovies((error, results) => {
@@ -62,10 +64,41 @@ function deleteMovie(req, res) {
     });
 }
 
+function uploadMoviePhoto(req, res) {
+    const movieId = req.params.id;
+    if (!req.file) {
+        return res.status(400).json({
+            status: false,
+            message: 'No file is selected.'
+        });
+    }
+
+    const photoPath = req.file.filename;
+    const newFileName = movieId + path.extname(req.file.originalname);
+
+    // Gunakan fs.renameSync untuk mengganti nama file
+    fs.renameSync(path.join(__dirname, '../views/photos', req.file.filename), path.join(__dirname, '../views/photos', newFileName));
+
+    moviesModel.updateMoviePhoto(movieId, newFileName, (error, results) => {
+        if (error) {
+            res.status(500).json({
+                status: false,
+                message: 'Error updating movie photo in the database.'
+            });
+        } else {
+            res.json({
+                status: true,
+                message: 'Movie photo updated successfully.',
+            });
+        }
+    });
+}
+
 module.exports = {
     getMovies,
     getMovieById,
     addMovie,
     updateMovie,
     deleteMovie,
+    uploadMoviePhoto, // Tambahkan fungsi uploadMoviePhoto
 };
