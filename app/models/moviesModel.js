@@ -28,10 +28,25 @@ function deleteMovie(movieId, callback) {
     pool.query(query, [movieId], callback);
 }
 
+function updateMoviePhoto(movieId, photoPath, callback) {
+    pool.query(
+        'UPDATE movies SET photo = $1 WHERE id = $2',
+        [photoPath, movieId],
+        (error, results) => {
+            if (error) {
+                callback(error);
+            } else {
+                callback(null, results);
+            }
+        }
+    );
+}
+
 module.exports = {
-    getAllMovies,
+    getAllMovies, // Ubah dari getMovies menjadi getAllMovies
     getMovieById,
     addMovie,
     updateMovie,
     deleteMovie,
+    updateMoviePhoto,
 };
