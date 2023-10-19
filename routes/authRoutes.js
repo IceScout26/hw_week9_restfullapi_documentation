@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const pool = require('../queries');
+const pool = require('../config/queries');
 const { TokenExpiredError } = require('jsonwebtoken'); // Import error TokenExpiredError (opsional)
 
 /**

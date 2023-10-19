@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../queries');
-const { authorize } = require('./auth');
+const pool = require('../config/queries');
+const { authorize } = require('./authRoutes');
 
 /**
  * @swagger

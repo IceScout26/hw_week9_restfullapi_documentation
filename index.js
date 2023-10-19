@@ -12,11 +12,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(morgan('common'));
 
-const moviesRouter = require('./routes/movies.js');
-const authRouter = require('./routes/auth.js');
+const moviesRouter = require('./routes/moviesRoutes.js');
+const authRouter = require('./routes/authRoutes.js');
 
-app.use('/movies', moviesRouter);
-app.use('/auth', authRouter.router);
+app.use('/moviesRoutes', moviesRouter);
+app.use('/authRoutes', authRouter.router);
 
 const swaggerOptions = {
     definition: {
