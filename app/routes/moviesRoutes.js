@@ -48,7 +48,7 @@ router.use('/uploads', express.static(path.join(__dirname, '../views/photos')));
  *                 $ref: '#/components/schemas/Movie'
  */
 
-router.get('/', moviesController.getMovies);
+router.get('/movies/', moviesController.getMovies);
 
 /**
  * @swagger
@@ -73,7 +73,7 @@ router.get('/', moviesController.getMovies);
  *               $ref: '#/components/schemas/Movie'
  */
 
-router.get('/:id', moviesController.getMovieById);
+router.get('/movies/:id', moviesController.getMovieById);
 
 /**
  * @swagger
@@ -95,7 +95,7 @@ router.get('/:id', moviesController.getMovieById);
  *         description: Movie added successfully.
  */
 
-router.post('/', moviesController.addMovie);
+router.post('/movies/', moviesController.addMovie);
 
 /**
  * @swagger
@@ -124,7 +124,7 @@ router.post('/', moviesController.addMovie);
  *         description: Movie updated successfully.
  */
 
-router.put('/:id', moviesController.updateMovie);
+router.put('/movies/:id', moviesController.updateMovie);
 
 /**
  * @swagger
@@ -147,7 +147,7 @@ router.put('/:id', moviesController.updateMovie);
  *         description: Movie deleted successfully.
  */
 
-router.delete('/:id', moviesController.deleteMovie);
+router.delete('/movies/:id', moviesController.deleteMovie);
 
 router.put('/photo/:id', upload.single('photo'), moviesController.uploadMoviePhoto);
 
